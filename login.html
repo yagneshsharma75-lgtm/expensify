@@ -1,204 +1,439 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Expensify Login</title>
+<meta charset="UTF-8">
 
-<link rel="stylesheet" href="style.css">
+<meta
+    name="viewport"
+    content="width=device-width,
+             initial-scale=1,
+             viewport-fit=cover">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+<title>Expensify — Login</title>
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com">
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
 
 <style>
 
-/* ===== PAGE BACKGROUND ===== */
-
-body{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:linear-gradient(135deg,#020617,#0f172a);
-overflow:hidden;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-/* Animated background glow */
-
-.bg{
-position:fixed;
-width:100%;
-height:100%;
-z-index:-1;
-overflow:hidden;
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
 }
 
-.bg span{
-position:absolute;
-width:600px;
-height:600px;
-border-radius:50%;
-filter:blur(140px);
-opacity:.6;
-animation:float 18s infinite alternate ease-in-out;
+body {
+
+    min-height: 100svh;
+
+    display: grid;
+    place-items: center;
+
+    padding:
+        calc(20px + env(safe-area-inset-top))
+        18px
+        calc(20px + env(safe-area-inset-bottom));
+
+    font-family: "Inter", sans-serif;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(59,130,246,.20),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(139,92,246,.18),
+            transparent 35%
+        ),
+        #070b14;
 }
 
-.bg span:nth-child(1){
-background:#2563eb;
-top:-200px;
-left:-200px;
+/* BACKGROUND */
+
+.background {
+    position: fixed;
+    inset: 0;
+
+    overflow: hidden;
+    pointer-events: none;
 }
 
-.bg span:nth-child(2){
-background:#9333ea;
-bottom:-200px;
-right:-200px;
-animation-delay:5s;
+.background span {
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    border-radius: 50%;
+
+    filter: blur(90px);
+
+    opacity: .2;
 }
 
-@keyframes float{
-from{transform:translate(0,0);}
-to{transform:translate(80px,-80px);}
+.background span:first-child {
+    background: #2563eb;
+
+    top: -80px;
+    left: -70px;
 }
 
-/* ===== LOGIN CARD ===== */
+.background span:last-child {
+    background: #7c3aed;
 
-.login-box{
-width:360px;
-padding:45px;
-border-radius:18px;
-background:rgba(255,255,255,0.06);
-backdrop-filter:blur(25px);
-box-shadow:
-0 20px 60px rgba(0,0,0,.6),
-inset 0 0 0 1px rgba(255,255,255,.05);
-
-text-align:center;
-animation:fadeUp .7s ease;
+    right: -70px;
+    bottom: -80px;
 }
 
-@keyframes fadeUp{
-from{opacity:0;transform:translateY(40px);}
-to{opacity:1;transform:translateY(0);}
+/* LOGIN CARD */
+
+.login-box {
+
+    position: relative;
+    z-index: 2;
+
+    width: 100%;
+    max-width: 390px;
+
+    padding: 30px 22px;
+
+    border-radius: 24px;
+
+    background: rgba(17,24,39,.82);
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.45);
+
+    backdrop-filter: blur(25px);
+
+    text-align: center;
 }
 
-.logo{
-font-size:26px;
-font-weight:700;
-margin-bottom:10px;
-background:linear-gradient(90deg,#38bdf8,#9333ea);
--webkit-background-clip:text;
-color:transparent;
+/* LOGO */
+
+.logo {
+
+    font-size: 27px;
+    font-weight: 800;
+
+    letter-spacing: -1px;
+
+    margin-bottom: 9px;
+
+    background:
+        linear-gradient(
+            100deg,
+            #60a5fa,
+            #818cf8,
+            #c084fc
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
 }
 
-.subtitle{
-opacity:.7;
-margin-bottom:30px;
+.subtitle {
+
+    color: #94a3b8;
+
+    font-size: 13px;
+    line-height: 1.5;
+
+    margin-bottom: 26px;
 }
 
 /* INPUTS */
 
-.login-box input{
-width:100%;
-padding:14px;
-margin:10px 0;
-border-radius:10px;
-border:none;
-background:rgba(255,255,255,0.08);
-color:white;
-outline:none;
+.input-group {
+
+    width: 100%;
+    text-align: left;
+
+    margin-bottom: 13px;
 }
 
-.login-box input::placeholder{
-color:#94a3b8;
+.input-group label {
+
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    margin-bottom: 7px;
 }
 
-/* BUTTON */
+.input-group input {
 
-.login-box button{
-width:100%;
-padding:14px;
-margin-top:15px;
-border:none;
-border-radius:12px;
-background:linear-gradient(135deg,#38bdf8,#2563eb);
-color:white;
-font-weight:600;
-cursor:pointer;
-box-shadow:0 8px 25px rgba(0,0,0,.4);
-transition:.3s;
+    display: block;
+
+    width: 100%;
+    height: 50px;
+
+    padding: 0 15px;
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    border-radius: 13px;
+
+    outline: none;
+
+    background: rgba(255,255,255,.055);
+
+    color: white;
+
+    font-size: 15px;
+
+    transition: .2s;
 }
 
-.login-box button:hover{
-transform:translateY(-3px);
+.input-group input::placeholder {
+    color: #64748b;
 }
 
-#error{
-margin-top:12px;
-color:#ef4444;
+.input-group input:focus {
+
+    border-color: rgba(96,165,250,.7);
+
+    background: rgba(255,255,255,.075);
+
+    box-shadow:
+        0 0 0 3px rgba(59,130,246,.10);
+}
+
+/* LOGIN BUTTON */
+
+.login-button {
+
+    width: 100%;
+    height: 51px;
+
+    margin-top: 8px;
+
+    border: none;
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #3b82f6,
+            #6366f1
+        );
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 12px 25px rgba(59,130,246,.22);
+}
+
+/* ERROR */
+
+#error {
+
+    min-height: 18px;
+
+    margin-top: 12px;
+
+    color: #f87171;
+
+    font-size: 12px;
 }
 
 /* FOOTER */
 
-.footer{
-margin-top:20px;
-opacity:.6;
-font-size:13px;
+.footer {
+
+    margin-top: 22px;
+
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+/* SMALL PHONES */
+
+@media (max-height: 650px) {
+
+    .login-box {
+        padding: 22px 20px;
+    }
+
+    .logo {
+        font-size: 24px;
+    }
+
+    .subtitle {
+        margin-bottom: 18px;
+    }
+
+    .input-group {
+        margin-bottom: 9px;
+    }
+
+    .input-group input {
+        height: 46px;
+    }
+
+    .login-button {
+        height: 47px;
+    }
+
+    .footer {
+        margin-top: 14px;
+    }
 }
 
 </style>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2563eb">
 </head>
 
 <body>
 
-<!-- Background -->
-<div class="bg">
-<span></span>
-<span></span>
+<div class="background">
+    <span></span>
+    <span></span>
 </div>
 
-<!-- Login Card -->
 <div class="login-box">
 
-<div class="logo">💰 Expensify</div>
-<p class="subtitle">Welcome back — manage your finances smarter</p>
+    <div class="logo">
+        💰 Expensify
+    </div>
 
-<input id="user" placeholder="Username">
-<input id="pass" type="password" placeholder="Password">
+    <p class="subtitle">
+        Welcome back — manage your finances smarter
+    </p>
 
-<button onclick="login()">Login</button>
+    <div class="input-group">
 
-<p id="error"></p>
+        <label>
+            Username
+        </label>
 
-<div class="footer">
-Modern Expense Tracker
-</div>
+        <input
+            id="user"
+            type="text"
+            autocomplete="username"
+            placeholder="Enter username">
+
+    </div>
+
+    <div class="input-group">
+
+        <label>
+            Password
+        </label>
+
+        <input
+            id="pass"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Enter password">
+
+    </div>
+
+    <button
+        class="login-button"
+        onclick="login()">
+
+        Login →
+
+    </button>
+
+    <p id="error"></p>
+
+    <div class="footer">
+        Expensify • Personal Finance
+    </div>
 
 </div>
 
 <script>
-function login(){
-  const u = document.getElementById("user").value.trim();
-  const p = document.getElementById("pass").value.trim();
-  const error = document.getElementById("error");
 
-  if(u === "admin" && p === "1234"){
-    localStorage.setItem("username", u);
-    localStorage.setItem("auth", "true");
-    error.innerText = "";
-    window.location.href = "dashboard.html";
-  } else {
-    error.innerText = "Invalid credentials. Try username: admin and password: 1234";
-  }
+function login() {
+
+    const username =
+        document.getElementById("user")
+        .value
+        .trim();
+
+    const password =
+        document.getElementById("pass")
+        .value
+        .trim();
+
+    const error =
+        document.getElementById("error");
+
+    if (
+        username === "admin" &&
+        password === "1234"
+    ) {
+
+        localStorage.setItem(
+            "username",
+            username
+        );
+
+        localStorage.setItem(
+            "auth",
+            "true"
+        );
+
+        window.location.href =
+            "dashboard.html";
+
+    } else {
+
+        error.innerText =
+            "Invalid username or password";
+
+    }
+
 }
 
-if(localStorage.getItem("auth") === "true"){
-  window.location.href = "dashboard.html";
-}
+/* Allow Enter key to login */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+            login();
+        }
+
+    }
+);
+
 </script>
 
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}</script>
 </body>
 </html>
