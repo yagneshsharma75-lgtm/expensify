@@ -1,438 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width,
-             initial-scale=1,
-             viewport-fit=cover">
-
-<title>Expensify — Login</title>
-
-<link
-    rel="preconnect"
-    href="https://fonts.googleapis.com">
-
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Login • Expensify</title>
 
 <style>
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-html,
-body {
-    width: 100%;
-    min-height: 100%;
-    overflow-x: hidden;
+html,body{
+    width:100%;
+    min-height:100%;
 }
 
-body {
-
-    min-height: 100svh;
-
-    display: grid;
-    place-items: center;
-
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+    background:#07111f;
+    color:#fff;
+    min-height:100svh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
     padding:
-        calc(20px + env(safe-area-inset-top))
-        18px
-        calc(20px + env(safe-area-inset-bottom));
-
-    font-family: "Inter", sans-serif;
-
-    color: white;
-
-    background:
-        radial-gradient(
-            circle at 20% 20%,
-            rgba(59,130,246,.20),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 80% 80%,
-            rgba(139,92,246,.18),
-            transparent 35%
-        ),
-        #070b14;
+        max(20px, env(safe-area-inset-top))
+        20px
+        max(20px, env(safe-area-inset-bottom));
 }
 
-/* BACKGROUND */
-
-.background {
-    position: fixed;
-    inset: 0;
-
-    overflow: hidden;
-    pointer-events: none;
+/* Background */
+body::before{
+    content:"";
+    position:fixed;
+    width:420px;
+    height:420px;
+    background:#2563eb;
+    filter:blur(140px);
+    opacity:.18;
+    top:-180px;
+    right:-180px;
+    border-radius:50%;
 }
 
-.background span {
-    position: absolute;
-
-    width: 220px;
-    height: 220px;
-
-    border-radius: 50%;
-
-    filter: blur(90px);
-
-    opacity: .2;
+body::after{
+    content:"";
+    position:fixed;
+    width:350px;
+    height:350px;
+    background:#06b6d4;
+    filter:blur(150px);
+    opacity:.10;
+    bottom:-180px;
+    left:-160px;
+    border-radius:50%;
 }
 
-.background span:first-child {
-    background: #2563eb;
-
-    top: -80px;
-    left: -70px;
+/* Main */
+.login-wrapper{
+    width:100%;
+    max-width:390px;
+    position:relative;
+    z-index:2;
 }
 
-.background span:last-child {
-    background: #7c3aed;
-
-    right: -70px;
-    bottom: -80px;
+/* Logo */
+.brand{
+    text-align:center;
+    margin-bottom:32px;
 }
 
-/* LOGIN CARD */
+.logo{
+    width:54px;
+    height:54px;
+    margin:0 auto 16px;
+    border-radius:17px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-.login-box {
+    background:linear-gradient(135deg,#3b82f6,#06b6d4);
+    box-shadow:
+        0 12px 35px rgba(37,99,235,.30),
+        inset 0 1px 1px rgba(255,255,255,.3);
 
-    position: relative;
-    z-index: 2;
+    font-size:25px;
+    font-weight:800;
+}
 
-    width: 100%;
-    max-width: 390px;
+.brand h1{
+    font-size:27px;
+    letter-spacing:-1px;
+    font-weight:750;
+}
 
-    padding: 30px 22px;
+.brand p{
+    color:#8190a5;
+    font-size:14px;
+    margin-top:7px;
+}
 
-    border-radius: 24px;
-
-    background: rgba(17,24,39,.82);
-
-    border: 1px solid rgba(255,255,255,.08);
+/* Login box */
+.login-box{
+    background:rgba(15,25,40,.82);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:25px;
+    padding:28px;
 
     box-shadow:
-        0 25px 70px rgba(0,0,0,.45);
+        0 25px 70px rgba(0,0,0,.35),
+        inset 0 1px rgba(255,255,255,.04);
 
-    backdrop-filter: blur(25px);
-
-    text-align: center;
+    backdrop-filter:blur(25px);
+    -webkit-backdrop-filter:blur(25px);
 }
 
-/* LOGO */
-
-.logo {
-
-    font-size: 27px;
-    font-weight: 800;
-
-    letter-spacing: -1px;
-
-    margin-bottom: 9px;
-
-    background:
-        linear-gradient(
-            100deg,
-            #60a5fa,
-            #818cf8,
-            #c084fc
-        );
-
-    -webkit-background-clip: text;
-    background-clip: text;
-
-    color: transparent;
+.login-title{
+    margin-bottom:23px;
 }
 
-.subtitle {
-
-    color: #94a3b8;
-
-    font-size: 13px;
-    line-height: 1.5;
-
-    margin-bottom: 26px;
+.login-title h2{
+    font-size:21px;
+    font-weight:700;
+    letter-spacing:-.4px;
 }
 
-/* INPUTS */
-
-.input-group {
-
-    width: 100%;
-    text-align: left;
-
-    margin-bottom: 13px;
+.login-title p{
+    color:#77869b;
+    font-size:13px;
+    margin-top:6px;
 }
 
-.input-group label {
-
-    display: block;
-
-    color: #94a3b8;
-
-    font-size: 12px;
-    font-weight: 500;
-
-    margin-bottom: 7px;
+/* Inputs */
+.field{
+    margin-bottom:16px;
 }
 
-.input-group input {
-
-    display: block;
-
-    width: 100%;
-    height: 50px;
-
-    padding: 0 15px;
-
-    border: 1px solid rgba(255,255,255,.08);
-
-    border-radius: 13px;
-
-    outline: none;
-
-    background: rgba(255,255,255,.055);
-
-    color: white;
-
-    font-size: 15px;
-
-    transition: .2s;
+.field label{
+    display:block;
+    color:#9aa8bb;
+    font-size:12px;
+    font-weight:600;
+    margin-bottom:8px;
 }
 
-.input-group input::placeholder {
-    color: #64748b;
+.input{
+    width:100%;
+    height:52px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.08);
+    outline:none;
+
+    background:#0a1525;
+    color:white;
+
+    padding:0 15px;
+    font-size:15px;
+
+    transition:.2s;
 }
 
-.input-group input:focus {
-
-    border-color: rgba(96,165,250,.7);
-
-    background: rgba(255,255,255,.075);
-
-    box-shadow:
-        0 0 0 3px rgba(59,130,246,.10);
+.input::placeholder{
+    color:#526176;
 }
 
-/* LOGIN BUTTON */
-
-.login-button {
-
-    width: 100%;
-    height: 51px;
-
-    margin-top: 8px;
-
-    border: none;
-    border-radius: 13px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #3b82f6,
-            #6366f1
-        );
-
-    color: white;
-
-    font-size: 15px;
-    font-weight: 700;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 12px 25px rgba(59,130,246,.22);
+.input:focus{
+    border-color:#3b82f6;
+    box-shadow:0 0 0 3px rgba(59,130,246,.12);
 }
 
-/* ERROR */
+/* Button */
+.login-btn{
+    width:100%;
+    height:52px;
+    margin-top:6px;
 
-#error {
+    border:none;
+    border-radius:14px;
 
-    min-height: 18px;
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    color:white;
 
-    margin-top: 12px;
+    font-size:15px;
+    font-weight:700;
 
-    color: #f87171;
+    cursor:pointer;
 
-    font-size: 12px;
+    box-shadow:0 10px 25px rgba(37,99,235,.25);
+    transition:.2s;
 }
 
-/* FOOTER */
-
-.footer {
-
-    margin-top: 22px;
-
-    color: #64748b;
-
-    font-size: 11px;
+.login-btn:active{
+    transform:scale(.98);
 }
 
-/* SMALL PHONES */
+/* Error */
+#error{
+    min-height:18px;
+    text-align:center;
+    color:#fb7185;
+    font-size:12px;
+    margin-top:13px;
+}
 
-@media (max-height: 650px) {
+/* Demo */
+.demo{
+    margin-top:20px;
+    padding-top:18px;
+    border-top:1px solid rgba(255,255,255,.06);
+    text-align:center;
+}
 
-    .login-box {
-        padding: 22px 20px;
-    }
+.demo span{
+    color:#65748a;
+    font-size:11px;
+}
 
-    .logo {
-        font-size: 24px;
-    }
+.demo strong{
+    color:#aeb9c9;
+    font-weight:600;
+}
 
-    .subtitle {
-        margin-bottom: 18px;
-    }
+/* Back */
+.back{
+    display:block;
+    text-align:center;
+    margin-top:22px;
 
-    .input-group {
-        margin-bottom: 9px;
-    }
+    color:#64748b;
+    text-decoration:none;
+    font-size:13px;
+}
 
-    .input-group input {
-        height: 46px;
-    }
+.back:hover{
+    color:#aab6c7;
+}
 
-    .login-button {
-        height: 47px;
-    }
-
-    .footer {
-        margin-top: 14px;
+/* Desktop */
+@media(min-width:700px){
+    .login-box{
+        padding:32px;
     }
 }
 
+/* Small phones */
+@media(max-height:650px){
+    .brand{
+        margin-bottom:18px;
+    }
+
+    .logo{
+        width:45px;
+        height:45px;
+        margin-bottom:9px;
+        border-radius:14px;
+        font-size:20px;
+    }
+
+    .brand h1{
+        font-size:23px;
+    }
+
+    .login-box{
+        padding:22px;
+    }
+
+    .field{
+        margin-bottom:11px;
+    }
+
+    .input,
+    .login-btn{
+        height:48px;
+    }
+}
 </style>
-
 </head>
 
 <body>
 
-<div class="background">
-    <span></span>
-    <span></span>
-</div>
+<div class="login-wrapper">
 
-<div class="login-box">
-
-    <div class="logo">
-        💰 Expensify
+    <div class="brand">
+        <div class="logo">₹</div>
+        <h1>Expensify</h1>
+        <p>Your money, organized.</p>
     </div>
 
-    <p class="subtitle">
-        Welcome back — manage your finances smarter
-    </p>
+    <div class="login-box">
 
-    <div class="input-group">
+        <div class="login-title">
+            <h2>Welcome back</h2>
+            <p>Sign in to continue to your dashboard.</p>
+        </div>
 
-        <label>
-            Username
-        </label>
+        <div class="field">
+            <label>USERNAME</label>
+            <input
+                id="user"
+                class="input"
+                type="text"
+                placeholder="Enter your username"
+                autocomplete="username"
+            >
+        </div>
 
-        <input
-            id="user"
-            type="text"
-            autocomplete="username"
-            placeholder="Enter username">
+        <div class="field">
+            <label>PASSWORD</label>
+            <input
+                id="pass"
+                class="input"
+                type="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+            >
+        </div>
+
+        <button class="login-btn" onclick="login()">
+            Sign in
+        </button>
+
+        <div id="error"></div>
+
+        <div class="demo">
+            <span>Demo account · </span>
+            <strong>admin / 1234</strong>
+        </div>
 
     </div>
 
-    <div class="input-group">
-
-        <label>
-            Password
-        </label>
-
-        <input
-            id="pass"
-            type="password"
-            autocomplete="current-password"
-            placeholder="Enter password">
-
-    </div>
-
-    <button
-        class="login-button"
-        onclick="login()">
-
-        Login →
-
-    </button>
-
-    <p id="error"></p>
-
-    <div class="footer">
-        Expensify • Personal Finance
-    </div>
+    <a class="back" href="index.html">← Back to Expensify</a>
 
 </div>
 
 <script>
+function login(){
 
-function login() {
+    const username = document.getElementById("user").value.trim();
+    const password = document.getElementById("pass").value.trim();
+    const error = document.getElementById("error");
 
-    const username =
-        document.getElementById("user")
-        .value
-        .trim();
+    if(username === "admin" && password === "1234"){
 
-    const password =
-        document.getElementById("pass")
-        .value
-        .trim();
+        localStorage.setItem("username", username);
+        localStorage.setItem("auth", "true");
 
-    const error =
-        document.getElementById("error");
+        window.location.href = "dashboard.html";
 
-    if (
-        username === "admin" &&
-        password === "1234"
-    ) {
+    }else{
 
-        localStorage.setItem(
-            "username",
-            username
-        );
-
-        localStorage.setItem(
-            "auth",
-            "true"
-        );
-
-        window.location.href =
-            "dashboard.html";
-
-    } else {
-
-        error.innerText =
-            "Invalid username or password";
+        error.textContent = "Incorrect username or password";
 
     }
-
 }
 
-/* Allow Enter key to login */
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (event.key === "Enter") {
-            login();
-        }
-
+document.addEventListener("keydown", function(e){
+    if(e.key === "Enter"){
+        login();
     }
-);
-
+});
 </script>
 
 </body>
