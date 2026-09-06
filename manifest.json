@@ -1,0 +1,11 @@
+{
+  "name": "Expensify",
+  "short_name": "Expensify",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#2563eb",
+  "description": "Premium personal finance and expense tracker",
+  "icons": [],
+  "scope": "./"
+}

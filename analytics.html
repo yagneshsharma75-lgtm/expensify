@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Expensify Analytics</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<div class="sidebar">
+<h2>Expensify</h2>
+<ul>
+<li onclick="location.href='dashboard.html'">🏠 Dashboard</li>
+<li onclick="location.href='transactions.html'">📜 Transactions</li>
+<li class="active">📊 Analytics</li>
+<li onclick="location.href='settings.html'">⚙️ Settings</li>
+</ul>
+</div>
+
+<div class="main">
+
+<h1>Analytics</h1><p class="page-subtitle">Understand where your money goes.</p>
+
+<div class="dashboard-grid">
+
+<div class="glass-box">
+<h3>Income vs Expense</h3>
+<canvas id="analysisChart"></canvas>
+</div>
+
+<div class="glass-box">
+<h3>Category Spending</h3>
+<canvas id="categoryChart"></canvas>
+</div>
+<div class="glass-box">
+<h3>📄 Monthly Report</h3>
+<p id="monthlyReport">Loading...</p>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<script src="script.js"></script>
+<!-- ================= LOGOUT MODAL ================= -->
+
+<div id="logoutModal" class="modal">
+  <div class="modal-box">
+    <h3>Confirm Logout</h3>
+    <p style="opacity:.7;font-size:14px">
+      Are you sure you want to logout?
+    </p>
+
+    <div class="modal-actions">
+      <button onclick="confirmLogout()">Yes, Logout</button>
+      <button onclick="closeLogoutModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<nav class="mobile-nav" aria-label="Main navigation">
+  <a href="dashboard.html" class="mobile-nav-item"><span>⌂</span><small>Home</small></a>
+  <a href="transactions.html" class="mobile-nav-item"><span>↕</span><small>Transactions</small></a>
+  <button class="mobile-add" onclick="openAddSheet()" aria-label="Add transaction">+</button>
+  <a href="analytics.html" class="mobile-nav-item"><span>◔</span><small>Analytics</small></a>
+  <a href="settings.html" class="mobile-nav-item"><span>⚙</span><small>Settings</small></a>
+</nav>
+
+<div id="addSheet" class="sheet-backdrop" onclick="closeAddSheet(event)">
+  <section class="add-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">
+      <div>
+        <span class="eyebrow">QUICK ACTION</span>
+        <h2>Add transaction</h2>
+      </div>
+      <button class="icon-btn" onclick="closeAddSheet()">✕</button>
+    </div>
+
+    <div class="amount-wrap">
+      <span id="sheetCurrency">₹</span>
+      <input id="sheetAmount" type="number" inputmode="decimal" placeholder="0">
+    </div>
+
+    <input id="sheetText" class="sheet-input" placeholder="What did you spend on?">
+
+    <div class="category-grid">
+      <button type="button" data-cat="🍔" onclick="selectSheetCategory(this)">🍔<small>Food</small></button>
+      <button type="button" data-cat="🛍️" onclick="selectSheetCategory(this)">🛍️<small>Shopping</small></button>
+      <button type="button" data-cat="🚗" onclick="selectSheetCategory(this)">🚗<small>Transport</small></button>
+      <button type="button" data-cat="🏠" onclick="selectSheetCategory(this)">🏠<small>Home</small></button>
+      <button type="button" data-cat="🎬" onclick="selectSheetCategory(this)">🎬<small>Fun</small></button>
+      <button type="button" data-cat="💰" onclick="selectSheetCategory(this)">💰<small>General</small></button>
+    </div>
+
+    <div class="sheet-type">
+      <button id="sheetExpense" class="selected" onclick="setSheetType('expense')">− Expense</button>
+      <button id="sheetIncome" onclick="setSheetType('income')">+ Income</button>
+    </div>
+
+    <button class="sheet-save" onclick="saveSheetTransaction()">Save transaction</button>
+  </section>
+</div>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}</script>
+</body>
+</html>
