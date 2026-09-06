@@ -522,3 +522,40 @@ window.shareExpensify = async () => {
     showToast("Summary copied");
   }
 };
+/* =================================
+   SMOOTH PAGE NAVIGATION
+================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    document.querySelectorAll("a[href]").forEach(link => {
+
+        link.addEventListener("click", function(e) {
+
+            const href = this.getAttribute("href");
+
+            // Ignore special links
+            if (
+                !href ||
+                href.startsWith("#") ||
+                href.startsWith("http") ||
+                href.startsWith("mailto:") ||
+                href.startsWith("tel:") ||
+                this.target === "_blank"
+            ) {
+                return;
+            }
+
+            e.preventDefault();
+
+            document.body.classList.add("page-leaving");
+
+            setTimeout(() => {
+                window.location.href = href;
+            }, 250);
+
+        });
+
+    });
+
+});
