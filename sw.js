@@ -1,4 +1,4 @@
-const CACHE = "expensify-v1";
+const CACHE = "expensify-v3";
 const ASSETS = [
   "dashboard.html","login.html","dashboard.html","transactions.html",
   "analytics.html","settings.html","style.css","script.js","manifest.json"

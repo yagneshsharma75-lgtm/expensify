@@ -179,35 +179,24 @@ Modern Expense Tracker
 </div>
 
 <script>
-
-/* Auto login */
-if(localStorage.getItem("auth")){
-window.location="dashboard.html";
-}
-
 function login(){
+  const u = document.getElementById("user").value.trim();
+  const p = document.getElementById("pass").value.trim();
+  const error = document.getElementById("error");
 
-let u=document.getElementById("user").value.trim();
-let p=document.getElementById("pass").value.trim();
-
-if(u==="admin" && p==="1234"){
-    localStorage.setItem("username",u);
-
-localStorage.setItem("auth","true");
-
-/* smooth transition */
-document.body.style.opacity="0";
-
-setTimeout(()=>{
-window.location="dashboard.html";
-},400);
-
-}else{
-document.getElementById("error").innerText="Invalid credentials";
+  if(u === "admin" && p === "1234"){
+    localStorage.setItem("username", u);
+    localStorage.setItem("auth", "true");
+    error.innerText = "";
+    window.location.href = "dashboard.html";
+  } else {
+    error.innerText = "Invalid credentials. Try username: admin and password: 1234";
+  }
 }
 
+if(localStorage.getItem("auth") === "true"){
+  window.location.href = "dashboard.html";
 }
-
 </script>
 
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}</script>
