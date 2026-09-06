@@ -1353,3 +1353,110 @@ body.page-leaving {
         animation: none;
     }
 }
+
+/* =========================================
+   EXPENSIFY — FLOATING MOBILE NAV
+   Final override for the actual .mobile-nav
+========================================= */
+
+@media (max-width: 768px) {
+
+    .mobile-nav {
+        position: fixed !important;
+
+        left: 12px !important;
+        right: 12px !important;
+        bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+
+        width: auto !important;
+        height: 68px !important;
+
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1.15fr 1fr 1fr !important;
+        align-items: end !important;
+
+        padding: 5px 7px !important;
+
+        z-index: 99999 !important;
+        border-radius: 24px !important;
+
+        background: rgba(8, 15, 30, 0.86) !important;
+        border: 1px solid rgba(255,255,255,.10) !important;
+
+        backdrop-filter: blur(24px) saturate(140%);
+        -webkit-backdrop-filter: blur(24px) saturate(140%);
+
+        box-shadow:
+            0 20px 50px rgba(0,0,0,.42),
+            0 5px 18px rgba(0,0,0,.22),
+            inset 0 1px 0 rgba(255,255,255,.06);
+
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        will-change: transform;
+    }
+
+    body {
+        padding-bottom: calc(92px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .mobile-nav-item {
+        height: 57px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 3px !important;
+        text-decoration: none !important;
+        color: rgba(255,255,255,.55) !important;
+    }
+
+    .mobile-nav-item span {
+        font-size: 21px !important;
+        line-height: 1 !important;
+    }
+
+    .mobile-nav-item small {
+        font-size: 9px !important;
+        font-weight: 600 !important;
+    }
+
+    .mobile-add {
+        width: 52px !important;
+        height: 52px !important;
+        min-height: 52px !important;
+        margin: 0 auto 9px !important;
+        padding: 0 !important;
+        border-radius: 17px !important;
+        font-size: 29px !important;
+        line-height: 1 !important;
+        box-shadow:
+            0 10px 28px rgba(37,99,235,.40),
+            0 0 25px rgba(37,99,235,.12);
+    }
+
+    .mobile-nav-item.active {
+        color: #38bdf8 !important;
+    }
+
+    .mobile-nav-item.active span {
+        transform: translateY(-1px);
+        text-shadow: 0 0 18px rgba(56,189,248,.45);
+    }
+
+    body.light .mobile-nav {
+        background: rgba(255,255,255,.88) !important;
+        border-color: rgba(15,23,42,.09) !important;
+        box-shadow:
+            0 20px 45px rgba(15,23,42,.16),
+            inset 0 1px 0 rgba(255,255,255,.7);
+    }
+
+    body.light .mobile-nav-item {
+        color: #64748b !important;
+    }
+
+    body.light .mobile-nav-item.active {
+        color: #2563eb !important;
+    }
+}
