@@ -117,11 +117,17 @@
        </label>
        <input class="settings-input" id="goalAmountInput" placeholder="48000" type="number"/>
       </div>
+      <div class="field" style="margin-top:14px">
+       <label>
+        CURRENT SAVED AMOUNT
+       </label>
+       <input class="settings-input" id="goalSavedInput" min="0" placeholder="0" type="number"/>
+      </div>
       <button class="ghost-btn" onclick="saveGoal()" style="width:100%;margin-top:16px">
        Save goal
       </button>
       <p class="muted" style="font-size:10px;line-height:1.6;margin-bottom:0">
-       Your saved amount can be changed in browser storage for now; cloud sync is the next upgrade.
+       Set how much you have already saved toward this goal. Progress updates on the dashboard.
       </p>
      </section>
      <section class="glass">
