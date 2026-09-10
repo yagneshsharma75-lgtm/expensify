@@ -1,42 +1,85 @@
 const STORE='finovaPro';
+
 let data=JSON.parse(localStorage.getItem(STORE)||'[]');
+
 let currency=localStorage.getItem('currency')||'₹';
+
 let sheetCategory='🍔',sheetType='expense',editingIndex=-1;
+
 const $=id=>document.getElementById(id);
+
 const money=n=>`${currency}${Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:0})}`;
+
 const save=()=>localStorage.setItem(STORE,JSON.stringify(data));
+
 const totals=()=>{let income=0,expense=0;data.forEach(t=>t.amount>0?income+=t.amount:expense+=Math.abs(t.amount));return{income,expense,balance:income-expense}};
+
 const catName={'🍔':'Food & Dining','🛍️':'Shopping','🚗':'Transport','🏠':'Home','🎬':'Entertainment','💰':'General'};
+
 function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+
 function toast(msg){let t=$('expToast');if(!t){t=document.createElement('div');t.id='expToast';t.className='toast';document.body.appendChild(t)}t.textContent=msg;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),1800)}
+
 function activeNav(){const cur=location.pathname.split('/').pop()||'dashboard.html';document.querySelectorAll('.mobile-nav-item,.nav-list a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')===cur));}
+
 function formatDate(){return new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}
+
 function updateDashboard(){const t=totals();if($('balance'))$('balance').textContent=money(t.balance);if($('income'))$('income').textContent=money(t.income);if($('expense'))$('expense').textContent=money(t.expense);if($('heroBalance'))$('heroBalance').textContent=money(t.balance);const budget=Number(localStorage.getItem('budget')||0),p=budget?Math.min(t.expense/budget*100,100):0;if($('budgetBar'))$('budgetBar').style.width=p+'%';if($('budgetPercent'))$('budgetPercent').textContent=Math.round(p)+'%';if($('budgetUsed'))$('budgetUsed').textContent=money(t.expense);if($('budgetLimit'))$('budgetLimit').textContent=money(budget);if($('budgetStatus'))$('budgetStatus').textContent=!budget?'Set a budget limit in Settings.':p>=100?'You have reached your budget limit.':p>=75?'You are close to your monthly limit.':'You are comfortably within budget.';if($('financeScore'))$('financeScore').textContent=Math.round(Math.max(0,Math.min(100,75-(p>80?(p-80)*1.2:0)+(t.balance>0?15:0))))+'/100';if($('streak'))$('streak').textContent=(t.balance>0?Math.min(12,Math.max(1,data.length)):0)+' Days';if($('goalBar'))updateGoal();renderRecent();}
+
 function renderRecent(){const box=$('recentList');if(!box)return;const items=data.slice(-5).reverse();box.innerHTML=items.length?items.map(t=>txMarkup(t)).join(''):'<div class="empty">No transactions yet. Tap + to add your first one.</div>';}
+
 function txMarkup(t,i){const icon=(t.text||'💰').trim().split(' ')[0];const name=(t.text||'Transaction').replace(/^\S+\s/,'');return `<div class="tx-row"><div class="tx-left"><div class="tx-icon">${esc(icon)}</div><div><div class="tx-name">${esc(name)}</div><div class="tx-date">${esc(t.date||'Today')}</div></div></div><div class="tx-amount ${t.amount>0?'positive':'negative'}">${t.amount>0?'+':'−'}${money(Math.abs(t.amount))}</div></div>`}
+
 window.addTransaction=()=>{const text=$('text')?.value.trim(),amount=Number($('amount')?.value),cat=$('category')?.value||'💰';if(!text||!amount)return toast('Enter a name and amount');data.push({text:`${cat} ${text}`,amount:Math.abs(amount)*-1,date:formatDate()});save();$('text').value='';$('amount').value='';updateDashboard();toast('Expense added ✓')};
+
 window.toggleTheme=()=>{document.body.classList.toggle('light');localStorage.setItem('theme',document.body.classList.contains('light'));};
+
 function updateGoal(){const name=localStorage.getItem('goalName')||'New iPhone',target=Number(localStorage.getItem('goalAmount')||0),saved=Number(localStorage.getItem('goalSaved')||0),p=target?Math.min(saved/target*100,100):0;if($('goalNameView'))$('goalNameView').textContent=name;if($('goalTarget'))$('goalTarget').textContent=money(target);if($('goalSaved'))$('goalSaved').textContent=money(saved);if($('goalRemaining'))$('goalRemaining').textContent=money(Math.max(target-saved,0));if($('goalProgress'))$('goalProgress').style.width=p+'%';if($('goalPercent'))$('goalPercent').textContent=p.toFixed(1)+'%';}
+
 window.saveGoal=()=>{const n=$('goalNameInput')?.value.trim(),a=Number($('goalAmountInput')?.value);if(!n||!a)return toast('Enter goal name and target');localStorage.setItem('goalName',n);localStorage.setItem('goalAmount',a);if(!localStorage.getItem('goalSaved'))localStorage.setItem('goalSaved','0');updateGoal();toast('Goal saved ✓')};
+
 function renderTransactions(){const list=$('transactionList');if(!list)return;const q=($('searchInput')?.value||'').toLowerCase();const type=$('filterType')?.value||'all';const sort=$('sortSelect')?.value||'new';let arr=data.map((t,i)=>({...t,_i:i})).filter(t=>(!q||(t.text||'').toLowerCase().includes(q))&&(type==='all'||(type==='income'?t.amount>0:t.amount<0)));if(sort==='high')arr.sort((a,b)=>Math.abs(b.amount)-Math.abs(a.amount));else if(sort==='low')arr.sort((a,b)=>Math.abs(a.amount)-Math.abs(b.amount));else arr.reverse();let inc=data.filter(t=>t.amount>0).length,exp=data.filter(t=>t.amount<0).length;if($('totalCount'))$('totalCount').textContent=data.length;if($('incomeCount'))$('incomeCount').textContent=inc;if($('expenseCount'))$('expenseCount').textContent=exp;list.innerHTML=arr.length?arr.map(t=>{const icon=(t.text||'💰').split(' ')[0],name=(t.text||'').replace(/^\S+\s/,'');return `<div class="tx-row"><div class="tx-left"><div class="tx-icon">${esc(icon)}</div><div><div class="tx-name">${esc(name)}</div><div class="tx-date">${esc(t.date||'')}</div></div></div><div style="display:flex;align-items:center;gap:10px"><b class="tx-amount ${t.amount>0?'positive':'negative'}">${t.amount>0?'+':'−'}${money(Math.abs(t.amount))}</b><div class="tx-actions"><button class="small-btn" onclick="editTransaction(${t._i})">Edit</button><button class="small-btn" onclick="deleteTransaction(${t._i})">Delete</button></div></div></div>`}).join(''):'<div class="empty">No transactions match your filters.</div>'}
+
 window.deleteTransaction=i=>{if(!confirm('Delete this transaction?'))return;data.splice(i,1);save();renderTransactions();updateDashboard();toast('Transaction deleted')};
+
 window.editTransaction=i=>{editingIndex=i;const t=data[i];$('editText').value=(t.text||'').replace(/^\S+\s/,'');$('editAmount').value=Math.abs(t.amount);$('editType').value=t.amount>0?'income':'expense';$('editModal').classList.add('open')};
+
 window.closeEdit=()=>$('editModal')?.classList.remove('open');
+
 window.updateTransaction=()=>{if(editingIndex<0)return;const text=$('editText').value.trim(),amount=Number($('editAmount').value),type=$('editType').value;if(!text||!amount)return toast('Fill all fields');const old=data[editingIndex],icon=(old.text||'💰').split(' ')[0];data[editingIndex]={...old,text:`${icon} ${text}`,amount:type==='income'?Math.abs(amount):-Math.abs(amount)};save();closeEdit();renderTransactions();updateDashboard();toast('Transaction updated ✓')};
+
 function initAnalytics(){if(!$('analysisChart'))return;const t=totals(),ctx=$('analysisChart').getContext('2d');new Chart(ctx,{type:'doughnut',data:{labels:['Income','Expenses'],datasets:[{data:[t.income,t.expense],backgroundColor:['#34d399','#fb7185'],borderWidth:0}]},options:{plugins:{legend:{labels:{color:'#aeb9ce'}}},cutout:'70%'}});const cats={};data.filter(x=>x.amount<0).forEach(x=>{const icon=(x.text||'💰').split(' ')[0];cats[catName[icon]||'Other']=(cats[catName[icon]||'Other']||0)+Math.abs(x.amount)});new Chart($('categoryChart').getContext('2d'),{type:'bar',data:{labels:Object.keys(cats),datasets:[{label:'Spending',data:Object.values(cats),backgroundColor:'#38bdf8',borderRadius:8}]},options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8d9ab5'}},y:{ticks:{color:'#8d9ab5'}}}}});if($('reportIncome'))$('reportIncome').textContent=money(t.income);if($('reportExpense'))$('reportExpense').textContent=money(t.expense);if($('reportSavings'))$('reportSavings').textContent=money(t.income-t.expense);}
+
 window.saveSettings=()=>{localStorage.setItem('budget',$('budgetInput').value||0);localStorage.setItem('currency',$('currencySelect').value);currency=$('currencySelect').value;toast('Settings saved ✓');setTimeout(()=>location.reload(),350)};
+
 window.resetData=()=>{if(confirm('Clear all transactions, goals and settings?')){localStorage.removeItem(STORE);localStorage.removeItem('budget');localStorage.removeItem('goalName');localStorage.removeItem('goalAmount');localStorage.removeItem('goalSaved');toast('Data cleared');setTimeout(()=>location.href='dashboard.html',500)}};
+
 window.logout=()=>{localStorage.removeItem('auth');location.href='login.html'};
+
 window.toggleChat=()=>$('aiChat')?.classList.toggle('open');
+
 window.sendMessage=()=>{const input=$('chatInput'),msg=input?.value.trim();if(!msg)return;addMessage(msg,'user-msg');input.value='';setTimeout(()=>addMessage(generateAIReply(msg),'bot-msg'),350)};
+
 function addMessage(text,cls){const box=$('chatMessages');if(!box)return;const d=document.createElement('div');d.className='msg '+cls;d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight}
+
 function generateAIReply(q){const m=q.toLowerCase(),t=totals();if(m.includes('balance'))return `Your current balance is ${money(t.balance)}.`;if(m.includes('income'))return `Your total income is ${money(t.income)}.`;if(m.includes('food')){const n=data.filter(x=>x.amount<0&&((x.text||'').startsWith('🍔'))).reduce((s,x)=>s+Math.abs(x.amount),0);return `You spent ${money(n)} on food.`}if(m.includes('expense')||m.includes('spend'))return `Your total expenses are ${money(t.expense)}.`;if(m.includes('save'))return t.balance>0?'You are currently spending less than you earn. Keep it up 👍':'Your expenses are higher than your income right now.';return 'Try asking: “What is my balance?”, “How much did I spend?”, or “How much did I spend on food?”'}
+
 window.openAddSheet=()=>{$('addSheet')?.classList.add('open');document.body.style.overflow='hidden';if($('sheetCurrency'))$('sheetCurrency').textContent=currency;setTimeout(()=>$('sheetAmount')?.focus(),120)};
+
 window.closeAddSheet=e=>{if(e&&e.target?.id!=='addSheet')return;$('addSheet')?.classList.remove('open');document.body.style.overflow=''};
+
 window.selectSheetCategory=b=>{document.querySelectorAll('.category-grid button').forEach(x=>x.classList.remove('active'));b.classList.add('active');sheetCategory=b.dataset.cat};
+
 window.setSheetType=type=>{sheetType=type;$('sheetExpense')?.classList.toggle('selected',type==='expense');$('sheetIncome')?.classList.toggle('selected',type==='income')};
+
 window.saveSheetTransaction=()=>{const amount=Number($('sheetAmount')?.value),text=$('sheetText')?.value.trim();if(!amount||!text)return toast('Enter an amount and name');data.push({text:`${sheetCategory} ${text}`,amount:sheetType==='income'?Math.abs(amount):-Math.abs(amount),date:formatDate()});save();$('sheetAmount').value='';$('sheetText').value='';setSheetType('expense');closeAddSheet();updateDashboard();renderTransactions();toast(sheetType==='income'?'Income added ✓':'Expense added ✓')};
+
 window.exportData=()=>{if(!data.length)return toast('No transactions to export');const rows=[['Name','Amount','Date'],...data.map(t=>[(t.text||'').replace(/^\S+\s/,''),t.amount,t.date])];const csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='expensify-transactions.csv';a.click();URL.revokeObjectURL(a.href)};
+
 window.shareExpensify=async()=>{try{await navigator.share({title:'Expensify',text:'Track your money with Expensify',url:location.href})}catch(e){navigator.clipboard?.writeText(location.href);toast('Link copied ✓')}};
-window.installExpensify=async()=>{if(window.__deferredPrompt){window.__deferredPrompt.prompt();await window.__deferredPrompt.userChoice;window.__deferredPrompt=null}else toast('Use your browser’s Add to Home Screen option')};window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.__deferredPrompt=e});
+
+window.installExpensify=async()=>{if(window.__deferredPrompt){window.__deferredPrompt.prompt();await window.__deferredPrompt.userChoice;window.__deferredPrompt=null}else toast('Use your browser’s Add to Home Screen option')};
+
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.__deferredPrompt=e});
+
 document.addEventListener('DOMContentLoaded',()=>{if(localStorage.getItem('theme')==='true')document.body.classList.add('light');activeNav();updateDashboard();renderTransactions();initAnalytics();if($('budgetInput')){$('budgetInput').value=localStorage.getItem('budget')||'';$('currencySelect').value=currency}if($('goalNameInput')){$('goalNameInput').value=localStorage.getItem('goalName')||'';$('goalAmountInput').value=localStorage.getItem('goalAmount')||'';updateGoal()}if($('userGreeting'))$('userGreeting').textContent=`Good ${new Date().getHours()<12?'morning':new Date().getHours()<18?'afternoon':'evening'}, ${localStorage.getItem('username')||'there'} 👋`;if($('liveDateTime'))$('liveDateTime').textContent=new Date().toLocaleString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});document.querySelectorAll('a[href$=".html"]').forEach(a=>a.addEventListener('click',e=>{if(a.target==='_blank'||e.metaKey||e.ctrlKey)return;e.preventDefault();document.body.classList.add('page-leaving');setTimeout(()=>location.href=a.href,220)}));$('searchInput')?.addEventListener('input',renderTransactions);$('filterType')?.addEventListener('change',renderTransactions);$('sortSelect')?.addEventListener('change',renderTransactions);$('chatInput')?.addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage()});});

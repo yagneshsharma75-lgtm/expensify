@@ -1,1 +1,259 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Analytics — Expensify</title><link rel="stylesheet" href="style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#2563eb"><script src="https://cdn.jsdelivr.net/npm/chart.js"></script></head><body><script>if(!localStorage.getItem('auth'))location.replace('login.html')</script><div class="app-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark">E</div><div><strong>Expensify</strong><small>PERSONAL FINANCE</small></div></div><nav class="nav-list"><a href="dashboard.html"><span class="nav-icon">⌂</span>Dashboard</a><a href="transactions.html"><span class="nav-icon">↕</span>Transactions</a><a href="analytics.html"><span class="nav-icon">◔</span>Analytics</a><a href="settings.html"><span class="nav-icon">⚙</span>Settings</a></nav></aside><main class="main"><div class="topbar"><div><span class="eyebrow">INSIGHTS</span><h1 class="page-title">Analytics</h1><p class="page-subtitle">Understand where your money is going.</p></div></div><div class="analytics-grid"><section class="glass chart-wrap"><div class="section-head"><h3>Income vs expenses</h3><span>Overall</span></div><canvas id="analysisChart"></canvas></section><section class="glass chart-wrap"><div class="section-head"><h3>Category spending</h3><span>Expenses</span></div><canvas id="categoryChart"></canvas></section></div><section class="glass" style="margin-top:18px"><div class="section-head"><h3>Monthly report</h3><span>Snapshot</span></div><div class="report-grid"><div class="report-card"><small>Income</small><b id="reportIncome" class="positive">₹0</b></div><div class="report-card"><small>Expenses</small><b id="reportExpense" class="negative">₹0</b></div><div class="report-card"><small>Savings</small><b id="reportSavings" class="blue">₹0</b></div></div></section></main></div><nav class="mobile-nav"><a href="dashboard.html" class="mobile-nav-item"><span>⌂</span><small>Home</small></a><a href="transactions.html" class="mobile-nav-item"><span>↕</span><small>Transactions</small></a><button class="mobile-add" onclick="openAddSheet()">+</button><a href="analytics.html" class="mobile-nav-item"><span>◔</span><small>Analytics</small></a><a href="settings.html" class="mobile-nav-item"><span>⚙</span><small>Settings</small></a></nav><div id="addSheet" class="sheet-backdrop" onclick="closeAddSheet(event)"><section class="add-sheet" onclick="event.stopPropagation()"><div class="sheet-handle"></div><div class="sheet-title"><div><span class="eyebrow">QUICK ACTION</span><h2>Add transaction</h2></div><button class="icon-btn" onclick="closeAddSheet()">✕</button></div><div class="amount-wrap"><span id="sheetCurrency">₹</span><input id="sheetAmount" type="number" inputmode="decimal" placeholder="0"></div><input id="sheetText" class="sheet-input" placeholder="What did you spend on?"><div class="category-grid"><button data-cat="🍔" onclick="selectSheetCategory(this)">🍔<small>Food</small></button><button data-cat="🛍️" onclick="selectSheetCategory(this)">🛍️<small>Shopping</small></button><button data-cat="🚗" onclick="selectSheetCategory(this)">🚗<small>Transport</small></button><button data-cat="🏠" onclick="selectSheetCategory(this)">🏠<small>Home</small></button><button data-cat="🎬" onclick="selectSheetCategory(this)">🎬<small>Fun</small></button><button data-cat="💰" class="active" onclick="selectSheetCategory(this)">💰<small>General</small></button></div><div class="sheet-type"><button id="sheetExpense" class="selected" onclick="setSheetType('expense')">− Expense</button><button id="sheetIncome" onclick="setSheetType('income')">+ Income</button></div><button class="sheet-save" onclick="saveSheetTransaction()">Save transaction</button></section></div><div id="expToast" class="toast"></div><script src="script.js"></script><script>if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+  <title>
+   Analytics &mdash; Expensify
+  </title>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="manifest.json" rel="manifest"/>
+  <meta content="#2563eb" name="theme-color"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js">
+  </script>
+ </head>
+ <body>
+  <script>
+   if(!localStorage.getItem('auth'))location.replace('login.html')
+  </script>
+  <div class="app-shell">
+   <aside class="sidebar">
+    <div class="brand">
+     <div class="brand-mark">
+      E
+     </div>
+     <div>
+      <strong>
+       Expensify
+      </strong>
+      <small>
+       PERSONAL FINANCE
+      </small>
+     </div>
+    </div>
+    <nav class="nav-list">
+     <a href="dashboard.html">
+      <span class="nav-icon">
+       ⌂
+      </span>
+      Dashboard
+     </a>
+     <a href="transactions.html">
+      <span class="nav-icon">
+       &varr;
+      </span>
+      Transactions
+     </a>
+     <a href="analytics.html">
+      <span class="nav-icon">
+       ◔
+      </span>
+      Analytics
+     </a>
+     <a href="settings.html">
+      <span class="nav-icon">
+       ⚙
+      </span>
+      Settings
+     </a>
+    </nav>
+   </aside>
+   <main class="main">
+    <div class="topbar">
+     <div>
+      <span class="eyebrow">
+       INSIGHTS
+      </span>
+      <h1 class="page-title">
+       Analytics
+      </h1>
+      <p class="page-subtitle">
+       Understand where your money is going.
+      </p>
+     </div>
+    </div>
+    <div class="analytics-grid">
+     <section class="glass chart-wrap">
+      <div class="section-head">
+       <h3>
+        Income vs expenses
+       </h3>
+       <span>
+        Overall
+       </span>
+      </div>
+      <canvas id="analysisChart">
+      </canvas>
+     </section>
+     <section class="glass chart-wrap">
+      <div class="section-head">
+       <h3>
+        Category spending
+       </h3>
+       <span>
+        Expenses
+       </span>
+      </div>
+      <canvas id="categoryChart">
+      </canvas>
+     </section>
+    </div>
+    <section class="glass" style="margin-top:18px">
+     <div class="section-head">
+      <h3>
+       Monthly report
+      </h3>
+      <span>
+       Snapshot
+      </span>
+     </div>
+     <div class="report-grid">
+      <div class="report-card">
+       <small>
+        Income
+       </small>
+       <b class="positive" id="reportIncome">
+        ₹0
+       </b>
+      </div>
+      <div class="report-card">
+       <small>
+        Expenses
+       </small>
+       <b class="negative" id="reportExpense">
+        ₹0
+       </b>
+      </div>
+      <div class="report-card">
+       <small>
+        Savings
+       </small>
+       <b class="blue" id="reportSavings">
+        ₹0
+       </b>
+      </div>
+     </div>
+    </section>
+   </main>
+  </div>
+  <nav class="mobile-nav">
+   <a class="mobile-nav-item" href="dashboard.html">
+    <span>
+     ⌂
+    </span>
+    <small>
+     Home
+    </small>
+   </a>
+   <a class="mobile-nav-item" href="transactions.html">
+    <span>
+     &varr;
+    </span>
+    <small>
+     Transactions
+    </small>
+   </a>
+   <button class="mobile-add" onclick="openAddSheet()">
+    +
+   </button>
+   <a class="mobile-nav-item" href="analytics.html">
+    <span>
+     ◔
+    </span>
+    <small>
+     Analytics
+    </small>
+   </a>
+   <a class="mobile-nav-item" href="settings.html">
+    <span>
+     ⚙
+    </span>
+    <small>
+     Settings
+    </small>
+   </a>
+  </nav>
+  <div class="sheet-backdrop" id="addSheet" onclick="closeAddSheet(event)">
+   <section class="add-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle">
+    </div>
+    <div class="sheet-title">
+     <div>
+      <span class="eyebrow">
+       QUICK ACTION
+      </span>
+      <h2>
+       Add transaction
+      </h2>
+     </div>
+     <button class="icon-btn" onclick="closeAddSheet()">
+      ✕
+     </button>
+    </div>
+    <div class="amount-wrap">
+     <span id="sheetCurrency">
+      ₹
+     </span>
+     <input id="sheetAmount" inputmode="decimal" placeholder="0" type="number"/>
+    </div>
+    <input class="sheet-input" id="sheetText" placeholder="What did you spend on?"/>
+    <div class="category-grid">
+     <button data-cat="🍔" onclick="selectSheetCategory(this)">
+      🍔
+      <small>
+       Food
+      </small>
+     </button>
+     <button data-cat="🛍️" onclick="selectSheetCategory(this)">
+      🛍️
+      <small>
+       Shopping
+      </small>
+     </button>
+     <button data-cat="🚗" onclick="selectSheetCategory(this)">
+      🚗
+      <small>
+       Transport
+      </small>
+     </button>
+     <button data-cat="🏠" onclick="selectSheetCategory(this)">
+      🏠
+      <small>
+       Home
+      </small>
+     </button>
+     <button data-cat="🎬" onclick="selectSheetCategory(this)">
+      🎬
+      <small>
+       Fun
+      </small>
+     </button>
+     <button class="active" data-cat="💰" onclick="selectSheetCategory(this)">
+      💰
+      <small>
+       General
+      </small>
+     </button>
+    </div>
+    <div class="sheet-type">
+     <button class="selected" id="sheetExpense" onclick="setSheetType('expense')">
+      &minus; Expense
+     </button>
+     <button id="sheetIncome" onclick="setSheetType('income')">
+      + Income
+     </button>
+    </div>
+    <button class="sheet-save" onclick="saveSheetTransaction()">
+     Save transaction
+    </button>
+   </section>
+  </div>
+  <div class="toast" id="expToast">
+  </div>
+  <script src="script.js">
+  </script>
+  <script>
+   if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})
+  </script>
+ </body>
+</html>

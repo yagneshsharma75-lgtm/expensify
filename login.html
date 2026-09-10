@@ -1,1 +1,76 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Sign in — Expensify</title><link rel="stylesheet" href="style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#2563eb"></head><body><main class="login-page"><section class="login-box"><div class="login-logo"><div class="brand" style="justify-content:center"><div class="brand-mark">E</div><div style="text-align:left"><strong>Expensify</strong><small>PERSONAL FINANCE</small></div></div></div><h1>Welcome back</h1><p class="sub">Sign in to continue managing your money.</p><form class="login-form" onsubmit="return login()"><div class="field"><label>USERNAME</label><input id="username" autocomplete="username" placeholder="Enter username" required></div><div class="field"><label>PASSWORD</label><input id="password" type="password" autocomplete="current-password" placeholder="Enter password" required></div><button class="primary-btn" type="submit" style="padding:14px">Sign in →</button></form><div class="demo">Demo account: <b>admin</b> / <b>1234</b></div><a class="back" href="index.html">← Back to Expensify</a></section></main><script>function login(){const u=document.getElementById('username').value.trim(),p=document.getElementById('password').value;if(u==='admin'&&p==='1234'){localStorage.setItem('username',u);localStorage.setItem('auth','true');location.href='dashboard.html'}else{alert('Invalid username or password');}return false}</script><script>if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+  <title>
+   Sign in &mdash; Expensify
+  </title>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="manifest.json" rel="manifest"/>
+  <meta content="#2563eb" name="theme-color"/>
+ </head>
+ <body>
+  <main class="login-page">
+   <section class="login-box">
+    <div class="login-logo">
+     <div class="brand" style="justify-content:center">
+      <div class="brand-mark">
+       E
+      </div>
+      <div style="text-align:left">
+       <strong>
+        Expensify
+       </strong>
+       <small>
+        PERSONAL FINANCE
+       </small>
+      </div>
+     </div>
+    </div>
+    <h1>
+     Welcome back
+    </h1>
+    <p class="sub">
+     Sign in to continue managing your money.
+    </p>
+    <form class="login-form" onsubmit="return login()">
+     <div class="field">
+      <label>
+       USERNAME
+      </label>
+      <input autocomplete="username" id="username" placeholder="Enter username" required=""/>
+     </div>
+     <div class="field">
+      <label>
+       PASSWORD
+      </label>
+      <input autocomplete="current-password" id="password" placeholder="Enter password" required="" type="password"/>
+     </div>
+     <button class="primary-btn" style="padding:14px" type="submit">
+      Sign in &rarr;
+     </button>
+    </form>
+    <div class="demo">
+     Demo account:
+     <b>
+      admin
+     </b>
+     /
+     <b>
+      1234
+     </b>
+    </div>
+    <a class="back" href="index.html">
+     &larr; Back to Expensify
+    </a>
+   </section>
+  </main>
+  <script>
+   function login(){const u=document.getElementById('username').value.trim(),p=document.getElementById('password').value;if(u==='admin'&&p==='1234'){localStorage.setItem('username',u);localStorage.setItem('auth','true');location.href='dashboard.html'}else{alert('Invalid username or password');}return false}
+  </script>
+  <script>
+   if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})
+  </script>
+ </body>
+</html>

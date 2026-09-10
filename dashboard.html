@@ -1,1 +1,439 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Dashboard — Expensify</title><link rel="stylesheet" href="style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#2563eb"></head><body><script>if(!localStorage.getItem('auth'))location.replace('login.html')</script><div class="app-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark">E</div><div><strong>Expensify</strong><small>PERSONAL FINANCE</small></div></div><nav class="nav-list"><a href="dashboard.html"><span class="nav-icon">⌂</span>Dashboard</a><a href="transactions.html"><span class="nav-icon">↕</span>Transactions</a><a href="analytics.html"><span class="nav-icon">◔</span>Analytics</a><a href="settings.html"><span class="nav-icon">⚙</span>Settings</a></nav><div class="sidebar-footer">Simple · Smart · Beautiful</div></aside><main class="main"><div class="topbar"><div><span class="eyebrow">OVERVIEW</span><h1 class="page-title">Dashboard</h1><p id="liveDateTime" class="page-subtitle"></p></div><div class="top-actions"><button class="ghost-btn" onclick="toggleChat()">✦ Ask AI</button><button class="danger-btn" onclick="logout()">Logout</button></div></div><section class="hero"><div class="hero-content"><span class="eyebrow">PERSONAL MONEY HUB</span><h1 id="userGreeting">Good morning 👋</h1><p>See your balance, spending, budget and goals at a glance. Add a transaction whenever you need — everything stays in one simple dashboard.</p><div class="hero-row"><button class="primary-btn" onclick="openAddSheet()">＋ Add transaction</button><span class="muted" style="font-size:11px">Current balance <b id="heroBalance" style="color:#fff">₹0</b></span></div></div></section><section class="stat-grid"><div class="stat-card"><span class="stat-label">TOTAL BALANCE</span><div id="balance" class="stat-value blue">₹0</div><span class="stat-foot">Income minus expenses</span></div><div class="stat-card"><span class="stat-label">MONTHLY INCOME</span><div id="income" class="stat-value positive">₹0</div><span class="stat-foot">Money coming in</span></div><div class="stat-card"><span class="stat-label">MONTHLY EXPENSE</span><div id="expense" class="stat-value negative">₹0</div><span class="stat-foot">Money going out</span></div><div class="stat-card"><span class="stat-label">FINANCE SCORE</span><div id="financeScore" class="stat-value">0/100</div><span class="stat-foot">A simple health signal</span></div></section><div class="dashboard-grid"><div style="display:grid;gap:18px"><section class="glass"><div class="section-head"><h3>Recent transactions</h3><a href="transactions.html" class="muted" style="font-size:11px;text-decoration:none">View all →</a></div><div id="recentList" class="mini-list"></div></section><section class="glass"><div class="section-head"><h3>Monthly budget</h3><span id="budgetPercent">0%</span></div><div class="budget-row"><span id="budgetUsed">₹0</span><span class="muted">of <span id="budgetLimit">₹0</span></span></div><div class="progress"><i id="budgetBar"></i></div><p id="budgetStatus" class="muted" style="font-size:11px;line-height:1.6;margin:12px 0 0">Set a budget limit in Settings.</p></section></div><div style="display:grid;gap:18px"><section class="glass"><h3>⚡ Quick add expense</h3><div class="quick-grid"><div class="field"><label>NAME</label><input id="text" placeholder="e.g. Starbucks"></div><div class="field"><label>AMOUNT</label><input id="amount" type="number" placeholder="500"></div><div class="field full"><label>CATEGORY</label><select id="category"><option value="🍔">Food & Dining</option><option value="🛍️">Shopping</option><option value="🚗">Transport</option><option value="🏠">Home</option><option value="🎬">Entertainment</option><option value="💰">General</option></select></div></div><button class="quick-add" onclick="addTransaction()">Add expense</button></section><section class="glass"><div class="section-head"><h3>🎯 Financial goal</h3><span id="goalPercent">0%</span></div><div class="goal-amount" id="goalNameView">New iPhone</div><p class="muted" style="font-size:11px">Saved <b id="goalSaved">₹0</b> · <span id="goalRemaining">₹0</span> remaining</p><div class="progress"><i id="goalProgress"></i></div><p class="muted" style="font-size:10px;margin-bottom:0">Target <span id="goalTarget">₹0</span></p></section><section class="glass"><div class="section-head"><h3>💡 Smart insight</h3><span>AI</span></div><p id="insightText" class="muted" style="font-size:12px;line-height:1.7">Keep an eye on your monthly budget and review Analytics regularly.</p><button class="ghost-btn" onclick="toggleChat()" style="width:100%">Ask Finance AI →</button></section></div></div></main></div><nav class="mobile-nav"><a href="dashboard.html" class="mobile-nav-item"><span>⌂</span><small>Home</small></a><a href="transactions.html" class="mobile-nav-item"><span>↕</span><small>Transactions</small></a><button class="mobile-add" onclick="openAddSheet()">+</button><a href="analytics.html" class="mobile-nav-item"><span>◔</span><small>Analytics</small></a><a href="settings.html" class="mobile-nav-item"><span>⚙</span><small>Settings</small></a></nav><div id="addSheet" class="sheet-backdrop" onclick="closeAddSheet(event)"><section class="add-sheet" onclick="event.stopPropagation()"><div class="sheet-handle"></div><div class="sheet-title"><div><span class="eyebrow">QUICK ACTION</span><h2>Add transaction</h2></div><button class="icon-btn" onclick="closeAddSheet()">✕</button></div><div class="amount-wrap"><span id="sheetCurrency">₹</span><input id="sheetAmount" type="number" inputmode="decimal" placeholder="0"></div><input id="sheetText" class="sheet-input" placeholder="What did you spend on?"><div class="category-grid"><button data-cat="🍔" onclick="selectSheetCategory(this)">🍔<small>Food</small></button><button data-cat="🛍️" onclick="selectSheetCategory(this)">🛍️<small>Shopping</small></button><button data-cat="🚗" onclick="selectSheetCategory(this)">🚗<small>Transport</small></button><button data-cat="🏠" onclick="selectSheetCategory(this)">🏠<small>Home</small></button><button data-cat="🎬" onclick="selectSheetCategory(this)">🎬<small>Fun</small></button><button data-cat="💰" class="active" onclick="selectSheetCategory(this)">💰<small>General</small></button></div><div class="sheet-type"><button id="sheetExpense" class="selected" onclick="setSheetType('expense')">− Expense</button><button id="sheetIncome" onclick="setSheetType('income')">+ Income</button></div><button class="sheet-save" onclick="saveSheetTransaction()">Save transaction</button></section></div><div id="aiChat" class="chat"><div class="chat-head"><b>✦ Finance AI</b><button class="icon-btn" onclick="toggleChat()">✕</button></div><div id="chatMessages" class="messages"><div class="msg bot-msg">Hey 👋 Ask me about your balance, income, expenses, savings or food spending.</div></div><div class="chat-input"><input id="chatInput" placeholder="Ask about your money…"><button onclick="sendMessage()">Send</button></div></div><div id="expToast" class="toast"></div><script src="script.js"></script><script>if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+  <title>
+   Dashboard &mdash; Expensify
+  </title>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="manifest.json" rel="manifest"/>
+  <meta content="#2563eb" name="theme-color"/>
+ </head>
+ <body>
+  <script>
+   if(!localStorage.getItem('auth'))location.replace('login.html')
+  </script>
+  <div class="app-shell">
+   <aside class="sidebar">
+    <div class="brand">
+     <div class="brand-mark">
+      E
+     </div>
+     <div>
+      <strong>
+       Expensify
+      </strong>
+      <small>
+       PERSONAL FINANCE
+      </small>
+     </div>
+    </div>
+    <nav class="nav-list">
+     <a href="dashboard.html">
+      <span class="nav-icon">
+       ⌂
+      </span>
+      Dashboard
+     </a>
+     <a href="transactions.html">
+      <span class="nav-icon">
+       &varr;
+      </span>
+      Transactions
+     </a>
+     <a href="analytics.html">
+      <span class="nav-icon">
+       ◔
+      </span>
+      Analytics
+     </a>
+     <a href="settings.html">
+      <span class="nav-icon">
+       ⚙
+      </span>
+      Settings
+     </a>
+    </nav>
+    <div class="sidebar-footer">
+     Simple &middot; Smart &middot; Beautiful
+    </div>
+   </aside>
+   <main class="main">
+    <div class="topbar">
+     <div>
+      <span class="eyebrow">
+       OVERVIEW
+      </span>
+      <h1 class="page-title">
+       Dashboard
+      </h1>
+      <p class="page-subtitle" id="liveDateTime">
+      </p>
+     </div>
+     <div class="top-actions">
+      <button class="ghost-btn" onclick="toggleChat()">
+       ✦ Ask AI
+      </button>
+      <button class="danger-btn" onclick="logout()">
+       Logout
+      </button>
+     </div>
+    </div>
+    <section class="hero">
+     <div class="hero-content">
+      <span class="eyebrow">
+       PERSONAL MONEY HUB
+      </span>
+      <h1 id="userGreeting">
+       Good morning 👋
+      </h1>
+      <p>
+       See your balance, spending, budget and goals at a glance. Add a transaction whenever you need &mdash; everything stays in one simple dashboard.
+      </p>
+      <div class="hero-row">
+       <button class="primary-btn" onclick="openAddSheet()">
+        ＋ Add transaction
+       </button>
+       <span class="muted" style="font-size:11px">
+        Current balance
+        <b id="heroBalance" style="color:#fff">
+         ₹0
+        </b>
+       </span>
+      </div>
+     </div>
+    </section>
+    <section class="stat-grid">
+     <div class="stat-card">
+      <span class="stat-label">
+       TOTAL BALANCE
+      </span>
+      <div class="stat-value blue" id="balance">
+       ₹0
+      </div>
+      <span class="stat-foot">
+       Income minus expenses
+      </span>
+     </div>
+     <div class="stat-card">
+      <span class="stat-label">
+       MONTHLY INCOME
+      </span>
+      <div class="stat-value positive" id="income">
+       ₹0
+      </div>
+      <span class="stat-foot">
+       Money coming in
+      </span>
+     </div>
+     <div class="stat-card">
+      <span class="stat-label">
+       MONTHLY EXPENSE
+      </span>
+      <div class="stat-value negative" id="expense">
+       ₹0
+      </div>
+      <span class="stat-foot">
+       Money going out
+      </span>
+     </div>
+     <div class="stat-card">
+      <span class="stat-label">
+       FINANCE SCORE
+      </span>
+      <div class="stat-value" id="financeScore">
+       0/100
+      </div>
+      <span class="stat-foot">
+       A simple health signal
+      </span>
+     </div>
+    </section>
+    <div class="dashboard-grid">
+     <div style="display:grid;gap:18px">
+      <section class="glass">
+       <div class="section-head">
+        <h3>
+         Recent transactions
+        </h3>
+        <a class="muted" href="transactions.html" style="font-size:11px;text-decoration:none">
+         View all &rarr;
+        </a>
+       </div>
+       <div class="mini-list" id="recentList">
+       </div>
+      </section>
+      <section class="glass">
+       <div class="section-head">
+        <h3>
+         Monthly budget
+        </h3>
+        <span id="budgetPercent">
+         0%
+        </span>
+       </div>
+       <div class="budget-row">
+        <span id="budgetUsed">
+         ₹0
+        </span>
+        <span class="muted">
+         of
+         <span id="budgetLimit">
+          ₹0
+         </span>
+        </span>
+       </div>
+       <div class="progress">
+        <i id="budgetBar">
+        </i>
+       </div>
+       <p class="muted" id="budgetStatus" style="font-size:11px;line-height:1.6;margin:12px 0 0">
+        Set a budget limit in Settings.
+       </p>
+      </section>
+     </div>
+     <div style="display:grid;gap:18px">
+      <section class="glass">
+       <h3>
+        ⚡ Quick add expense
+       </h3>
+       <div class="quick-grid">
+        <div class="field">
+         <label>
+          NAME
+         </label>
+         <input id="text" placeholder="e.g. Starbucks"/>
+        </div>
+        <div class="field">
+         <label>
+          AMOUNT
+         </label>
+         <input id="amount" placeholder="500" type="number"/>
+        </div>
+        <div class="field full">
+         <label>
+          CATEGORY
+         </label>
+         <select id="category">
+          <option value="🍔">
+           Food &amp; Dining
+          </option>
+          <option value="🛍️">
+           Shopping
+          </option>
+          <option value="🚗">
+           Transport
+          </option>
+          <option value="🏠">
+           Home
+          </option>
+          <option value="🎬">
+           Entertainment
+          </option>
+          <option value="💰">
+           General
+          </option>
+         </select>
+        </div>
+       </div>
+       <button class="quick-add" onclick="addTransaction()">
+        Add expense
+       </button>
+      </section>
+      <section class="glass">
+       <div class="section-head">
+        <h3>
+         🎯 Financial goal
+        </h3>
+        <span id="goalPercent">
+         0%
+        </span>
+       </div>
+       <div class="goal-amount" id="goalNameView">
+        New iPhone
+       </div>
+       <p class="muted" style="font-size:11px">
+        Saved
+        <b id="goalSaved">
+         ₹0
+        </b>
+        &middot;
+        <span id="goalRemaining">
+         ₹0
+        </span>
+        remaining
+       </p>
+       <div class="progress">
+        <i id="goalProgress">
+        </i>
+       </div>
+       <p class="muted" style="font-size:10px;margin-bottom:0">
+        Target
+        <span id="goalTarget">
+         ₹0
+        </span>
+       </p>
+      </section>
+      <section class="glass">
+       <div class="section-head">
+        <h3>
+         💡 Smart insight
+        </h3>
+        <span>
+         AI
+        </span>
+       </div>
+       <p class="muted" id="insightText" style="font-size:12px;line-height:1.7">
+        Keep an eye on your monthly budget and review Analytics regularly.
+       </p>
+       <button class="ghost-btn" onclick="toggleChat()" style="width:100%">
+        Ask Finance AI &rarr;
+       </button>
+      </section>
+     </div>
+    </div>
+   </main>
+  </div>
+  <nav class="mobile-nav">
+   <a class="mobile-nav-item" href="dashboard.html">
+    <span>
+     ⌂
+    </span>
+    <small>
+     Home
+    </small>
+   </a>
+   <a class="mobile-nav-item" href="transactions.html">
+    <span>
+     &varr;
+    </span>
+    <small>
+     Transactions
+    </small>
+   </a>
+   <button class="mobile-add" onclick="openAddSheet()">
+    +
+   </button>
+   <a class="mobile-nav-item" href="analytics.html">
+    <span>
+     ◔
+    </span>
+    <small>
+     Analytics
+    </small>
+   </a>
+   <a class="mobile-nav-item" href="settings.html">
+    <span>
+     ⚙
+    </span>
+    <small>
+     Settings
+    </small>
+   </a>
+  </nav>
+  <div class="sheet-backdrop" id="addSheet" onclick="closeAddSheet(event)">
+   <section class="add-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle">
+    </div>
+    <div class="sheet-title">
+     <div>
+      <span class="eyebrow">
+       QUICK ACTION
+      </span>
+      <h2>
+       Add transaction
+      </h2>
+     </div>
+     <button class="icon-btn" onclick="closeAddSheet()">
+      ✕
+     </button>
+    </div>
+    <div class="amount-wrap">
+     <span id="sheetCurrency">
+      ₹
+     </span>
+     <input id="sheetAmount" inputmode="decimal" placeholder="0" type="number"/>
+    </div>
+    <input class="sheet-input" id="sheetText" placeholder="What did you spend on?"/>
+    <div class="category-grid">
+     <button data-cat="🍔" onclick="selectSheetCategory(this)">
+      🍔
+      <small>
+       Food
+      </small>
+     </button>
+     <button data-cat="🛍️" onclick="selectSheetCategory(this)">
+      🛍️
+      <small>
+       Shopping
+      </small>
+     </button>
+     <button data-cat="🚗" onclick="selectSheetCategory(this)">
+      🚗
+      <small>
+       Transport
+      </small>
+     </button>
+     <button data-cat="🏠" onclick="selectSheetCategory(this)">
+      🏠
+      <small>
+       Home
+      </small>
+     </button>
+     <button data-cat="🎬" onclick="selectSheetCategory(this)">
+      🎬
+      <small>
+       Fun
+      </small>
+     </button>
+     <button class="active" data-cat="💰" onclick="selectSheetCategory(this)">
+      💰
+      <small>
+       General
+      </small>
+     </button>
+    </div>
+    <div class="sheet-type">
+     <button class="selected" id="sheetExpense" onclick="setSheetType('expense')">
+      &minus; Expense
+     </button>
+     <button id="sheetIncome" onclick="setSheetType('income')">
+      + Income
+     </button>
+    </div>
+    <button class="sheet-save" onclick="saveSheetTransaction()">
+     Save transaction
+    </button>
+   </section>
+  </div>
+  <div class="chat" id="aiChat">
+   <div class="chat-head">
+    <b>
+     ✦ Finance AI
+    </b>
+    <button class="icon-btn" onclick="toggleChat()">
+     ✕
+    </button>
+   </div>
+   <div class="messages" id="chatMessages">
+    <div class="msg bot-msg">
+     Hey 👋 Ask me about your balance, income, expenses, savings or food spending.
+    </div>
+   </div>
+   <div class="chat-input">
+    <input id="chatInput" placeholder="Ask about your money&hellip;"/>
+    <button onclick="sendMessage()">
+     Send
+    </button>
+   </div>
+  </div>
+  <div class="toast" id="expToast">
+  </div>
+  <script src="script.js">
+  </script>
+  <script>
+   if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})
+  </script>
+ </body>
+</html>
